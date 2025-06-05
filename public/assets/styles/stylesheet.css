@@ -4,11 +4,10 @@
   box-sizing: border-box;
 }
 
-
 body {
   /* Colors */
-
-
+  --primary-color: #351fb7;
+  
   /* Fonts */
   --font-subheader: "IBM Plex Sans", sans-serif;
 
@@ -21,7 +20,6 @@ body {
   --font-size-mobile-l: 1.2em;
   --font-size-mobile-m: 1em;
   --font-size-mobile-s: 0.8em;
-
 }
 
 /* Headings */
@@ -57,6 +55,10 @@ h3 {
   @media (min-width: 850px) {
     font-size: var(--font-size-desktop-m);
   }
+}
+
+p {
+  font-family: var(--font-subheader);
 }
 
 /* Buttons */
