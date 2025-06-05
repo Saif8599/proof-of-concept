@@ -1,0 +1,69 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+body {
+  /* Colors */
+
+
+  /* Fonts */
+  --font-subheader: "IBM Plex Sans", sans-serif;
+
+  /* Sizes */
+  --font-size-desktop-xl: 3em;
+  --font-size-desktop-l: 2em;
+  --font-size-desktop-m: 1.3em;
+  --font-size-desktop-s: 1.2em;
+  --font-size-mobile-xl: 2em;
+  --font-size-mobile-l: 1.2em;
+  --font-size-mobile-m: 1em;
+  --font-size-mobile-s: 0.8em;
+
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-subheader);
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0.5em 0;
+}
+
+h1 {
+  font-size: var(--font-size-mobile-xl);
+  font-weight: 700;
+  @media (min-width: 850px) {
+    font-size: var(--font-size-desktop-xl);
+  }
+}
+
+h2 {
+  font-size: var(--font-size-mobile-l);
+  @media (min-width: 850px) {
+    font-size: var(--font-size-desktop-l);
+  }
+}
+
+h3 {
+  font-size: var(--font-size-mobile-m);
+  @media (min-width: 850px) {
+    font-size: var(--font-size-desktop-m);
+  }
+}
+
+/* Buttons */
+
+/* Forms */
+
+/* Transition */
+@view-transition {
+  navigation: auto;
+}
