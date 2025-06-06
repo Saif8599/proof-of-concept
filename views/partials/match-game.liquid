@@ -1,0 +1,15 @@
+<section class="match-game">
+  Member list : 
+  {% for member in members %}
+    <div class="member">
+      {{ member }}
+    </div>
+  {% endfor %}
+
+
+{% comment %} <details>
+    <summary>data</summary>
+    <pre>{{ members | json: 4 }}</pre>
+</details> {% endcomment %}
+
+</section>
