@@ -7,7 +7,10 @@
 body {
   /* Colors */
   --primary-color: #351fb7;
-  
+  --secondary-color: #3c4858;
+  --purple: #9a8fdb;
+  --text-color: black;
+
   /* Fonts */
   --font-subheader: "IBM Plex Sans", sans-serif;
 
@@ -32,12 +35,11 @@ h6 {
   font-family: var(--font-subheader);
   font-weight: 600;
   line-height: 1.2;
-  margin: 0.5em 0;
 }
 
 h1 {
   font-size: var(--font-size-mobile-xl);
-  font-weight: 700;
+  color: var(--secondary-color);
   @media (min-width: 850px) {
     font-size: var(--font-size-desktop-xl);
   }
@@ -59,8 +61,19 @@ h3 {
 
 p {
   font-family: var(--font-subheader);
+  color: var(--secondary-color);
+  font-size: var(--font-size-mobile-l);
 }
 
+a {
+  font-family: var(--font-subheader);
+  font-size: var(--font-size-mobile-l);
+  text-decoration: none;
+}
+
+li {
+  list-style-type: none;
+}
 /* Buttons */
 
 /* Forms */
