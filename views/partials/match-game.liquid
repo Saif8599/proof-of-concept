@@ -1,15 +1,20 @@
 <section class="match-game">
-  Member list : 
-  {% for member in members %}
-    <div class="member">
-      {{ member }}
-    </div>
-  {% endfor %}
+  <h1>Leden van klas {{ class_id }}</h1>
 
-
-{% comment %} <details>
-    <summary>data</summary>
-    <pre>{{ members | json: 4 }}</pre>
-</details> {% endcomment %}
-
+  <ul class="member-list">
+    {% for member in members %}
+      <li class="member-card" id="{{ member.id }}">
+        <picture>
+          <source srcset="/proxy-image?url={{ member.depiction_url }}" type="image/webp">
+          <img
+            src="/proxy-image?url={{ member.depiction_url }}"
+            alt="Profiel van {{ member.profile.resource.title }}"
+            width="100"
+            height="100"
+            loading="lazy">
+        </picture>
+        <p>{{ member.profile.resource.title }}</p>
+      </li>
+    {% endfor %}
+  </ul>
 </section>
