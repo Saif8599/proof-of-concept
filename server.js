@@ -143,6 +143,11 @@ app.get("/class/55501", async function (request, response) {
   });
 });
 
+// Geen matching route request
+app.use((request, respond) => {
+  respond.status(404).render("404.liquid");
+});
+
 // Port
 app.set("port", process.env.PORT || 8000);
 app.listen(app.get("port"), function () {
