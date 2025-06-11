@@ -96,12 +96,12 @@ app.post("/notice-board", async function (request, respond) {
 });
 
 // Class
-app.get("/class/55501", async function (request, response) {
-  // const classID = request.params.classID;
+app.get("/class/:classID", async function (request, response) {
+  const classID = request.params.classID;
 
   // 1. API call voor alle members uit geselecteerde class
   const classMembersResponse = await fetch(
-    `${baseUrl}/en/api/model/maxclass_membership/get/class/55501/member`,
+    `${baseUrl}/en/api/model/maxclass_membership/get/class/${classID}/member`,
     {
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -139,7 +139,7 @@ app.get("/class/55501", async function (request, response) {
   // 3. Render template
   response.render("class.liquid", {
     members: membersWithDetails,
-    // class_id: classID,
+    class_id: classID,
   });
 });
 
