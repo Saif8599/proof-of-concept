@@ -39,26 +39,25 @@ app.get("/proxy-image", async (request, response) => {
   try {
     // 1. Pak en decode de URL
     const imageUrl = decodeURIComponent(request.query.url);
-    
+
     // 2. Basis validatie
-    if (!imageUrl?.includes('ls-test2.worrell.nl')) {
-      return res.status(403).send('Alleen ls-test2.worrell.nl URLs toegestaan');
+    if (!imageUrl?.includes("ls-test2.worrell.nl")) {
+      return res.status(403).send("Alleen ls-test2.worrell.nl URLs toegestaan");
     }
 
     // 3. Haal afbeelding op
     const imgResponse = await fetch(imageUrl, {
-      headers: { Authorization: `Bearer ${apiKey}` }
+      headers: { Authorization: `Bearer ${apiKey}` },
     });
 
     // 4. Stuur door naar browser
     response.set({
-      'Content-Type': imgResponse.headers.get('content-type'),
+      "Content-Type": imgResponse.headers.get("content-type"),
     });
     response.send(Buffer.from(await imgResponse.arrayBuffer()));
-
   } catch (error) {
-    console.error('Proxy error:', error.message);
-    response.status(500).send('Fout bij laden afbeelding');
+    console.error("Proxy error:", error.message);
+    response.status(500).send("Fout bij laden afbeelding");
   }
 });
 
@@ -97,12 +96,12 @@ app.post("/notice-board", async function (request, respond) {
 });
 
 // Class
-app.get("/class/:classID", async function (request, response) {
-  const classID = request.params.classID;
+app.get("/class/55501", async function (request, response) {
+  // const classID = request.params.classID;
 
   // 1. API call voor alle members uit geselecteerde class
   const classMembersResponse = await fetch(
-    `${baseUrl}/en/api/model/maxclass_membership/get/class/${classID}/member`,
+    `${baseUrl}/en/api/model/maxclass_membership/get/class/55501/member`,
     {
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -140,7 +139,7 @@ app.get("/class/:classID", async function (request, response) {
   // 3. Render template
   response.render("class.liquid", {
     members: membersWithDetails,
-    class_id: classID,
+    // class_id: classID,
   });
 });
 
