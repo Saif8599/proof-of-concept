@@ -1,20 +1,157 @@
 <section class="match-game">
   <h1>Leden van klas {{ class_id }}</h1>
 
-  <ul class="member-list">
-    {% for member in members %}
-      <li class="member-card" id="{{ member.id }}">
-        <picture>
-          <source srcset="/proxy-image?url={{ member.depiction_url }}" type="image/webp">
-          <img
-            src="/proxy-image?url={{ member.depiction_url }}"
-            alt="Profiel van {{ member.profile.resource.title }}"
-            width="100"
-            height="100"
-            loading="lazy">
-        </picture>
-        <p>{{ member.profile.resource.title }}</p>
-      </li>
-    {% endfor %}
-  </ul>
+  <div class="container">
+    <ul class="member-list">
+      {% for member in members %}
+        <li class="member-picture" id="pic-{{ member.id }}">
+          <picture>
+            <source srcset="/proxy-image?url={{ member.depiction_url }}" type="image/webp">
+            <img
+              src="/proxy-image?url={{ member.depiction_url }}"
+              alt="Profiel van {{ member.profile.resource.title }}"
+              width="100"
+              height="100"
+              loading="lazy">
+          </picture>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <ul class="member-list">
+      {% for member in members %}
+        <li
+          class="member-title"
+          draggable="true"
+          id="name-{{ member.id }}">
+          <p>{{ member.profile.resource.title }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="end-message">
+    <p>
+      GG, play again
+    </p>
+    <a href="/class/55501">Restart</a>
+  </div>
 </section>
+
+<style>
+  .container {
+    display: grid;
+    max-width: 960px;
+    grid-template-columns: repeat(2, 1fr);
+    margin: auto;
+  }
+  .member-list:nth-child(1) {
+    width: fit-content;
+    height: fit-content;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 765px) {
+    .member-list:nth-child(1) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .member-list {
+    padding: 5px;
+  }
+
+  .member-list li {
+    list-style: none;
+    padding: 10px;
+    margin: 5px;
+    background-color: #cfd8dc;
+    border: 1px solid #b0bec5;
+    color: #263238;
+    cursor: grab;
+    width: auto;
+    user-select: none;
+  }
+
+  .member-title {
+    padding: 5px;
+    border: 1px solid black;
+  }
+
+  .end-message {
+    display: none;
+  }
+</style>
+
+<script>
+  const draggableListItems = document.querySelectorAll('.member-list li');
+  const endMessage = document.querySelector('.end-message');
+  const totalMembers = document.querySelectorAll('.member-picture').length;
+  
+  // console.log(`totaal members : ${totalMembers}`);
+  
+  // Huidige drag
+  let selectedId;
+  
+  // Target drop
+  let dropTargetId;
+  
+  // Teller voor correcte drops
+  let matchingCounter = 0;
+  
+  
+  function addEventListener() {
+    draggableListItems.forEach (item => {
+      item.addEventListener('dragstart', dragStart);
+      item.addEventListener('dragenter', dragEnter);
+      item.addEventListener('drop', dragDrop);
+      item.addEventListener('dragover', dragOver);
+      item.addEventListener('dragleave', dragLeave);
+    })
+  } 
+  
+  function dragStart() {
+  selectedId = this.id;
+  // console.log(`selected : ${selectedId}`);
+  }
+  
+  function dragEnter() {
+  this.classList.add('over');
+  }
+  
+  function dragDrop() {
+  if (!this.classList.contains('member-title')) return;
+  
+    dropTargetId = this.id;
+  
+    if (checkForMatch(selectedId, dropTargetId)) {
+    // Verberg beide elementen
+    const memberId = selectedId.split('-')[1]; // Haal het ID-nummer eruit
+    document.getElementById(`pic-${memberId}`).style.display = 'none';
+    document.getElementById(`name-${memberId}`).style.display = 'none';
+    matchingCounter++;
+    }
+  
+    // console.log(`dropTargetId : ${dropTargetId}`);
+  
+    if (matchingCounter === totalMembers) {
+      endMessage.style.display = 'block'; // Show end-message na een win
+    }
+  
+    this.classList.remove('over');
+  }  
+  
+  function dragOver(event) {
+  event.preventDefault(); // Voorkom pagia reload
+  }
+  
+  function dragLeave() {
+    this.classList.remove('over');
+  }
+  
+  function checkForMatch(selected, dropTarget) {
+    // Split en match op basis van het ID-nummer
+  return selected.split('-')[1] === dropTarget.split('-')[1];
+  }
+</script>
