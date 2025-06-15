@@ -1,6 +1,12 @@
 <section class="match-game">
-  <h1>Leden van klas {{ class_id }}</h1>
-
+  <div class="match-game-info">
+    <h1>Match Game</h1>
+    <h2>leden van klas {{ class_id }}</h2>
+    <p>
+      <strong>Instructie:</strong>
+      Sleep de naam van een lid naar de juiste profielfoto om ze te matchen!
+    </p>
+  </div>
   <div class="container">
     <ul class="member-list">
       {% for member in members %}
@@ -31,25 +37,35 @@
   </div>
 
   <div class="end-message">
-    <p>
-      GG, play again
-    </p>
-    <a href="/class/55501">Restart</a>
+    <h2>Goed gedaan! Alle matches zijn voltooid!</h2>
+    <p>Wil je het nog eens proberen?</p>
+    <a href="/class/55501" class="restart-button">Opnieuw spelen</a>
   </div>
 </section>
 
 <style>
+  .match-game {
+    max-width: 960px;
+    padding: 1em;
+    margin: auto;
+  }
+
+  .match-game-info p {
+    margin-top: 10px;
+  }
+
   .container {
     display: grid;
-    max-width: 960px;
     grid-template-columns: repeat(2, 1fr);
-    margin: auto;
+    margin-top: 1em;
+    gap: 1em;
   }
   .member-list:nth-child(1) {
     width: fit-content;
     height: fit-content;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
   }
 
   @media (min-width: 765px) {
@@ -58,29 +74,41 @@
     }
   }
 
-  .member-list {
-    padding: 5px;
+  @media (min-width: 1440px) {
+    .member-list:nth-child(1) {
+      grid-template-columns: repeat(4, 1fr);
+    }
   }
 
   .member-list li {
     list-style: none;
-    padding: 10px;
-    margin: 5px;
-    background-color: #cfd8dc;
-    border: 1px solid #b0bec5;
     color: #263238;
     cursor: grab;
     width: auto;
     user-select: none;
   }
 
+  .member-picture img {
+    border: 1px solid black;
+  }
+
   .member-title {
     padding: 5px;
+    background-color: #cfd8dc;
     border: 1px solid black;
+    margin-bottom: 5px;
   }
 
   .end-message {
     display: none;
+  }
+
+  .correct-hover {
+    box-shadow: 0 0 0 3px green;
+  }
+
+  .incorrect-hover {
+    box-shadow: 0 0 0 3px red;
   }
 </style>
 
@@ -116,16 +144,22 @@
   // console.log(`selected : ${selectedId}`);
   }
   
-  function dragEnter() {
-  this.classList.add('over');
+  function dragEnter(event) {  
+  // Check of het een goede match is
+  const isCorrect = checkForMatch(selectedId, this.id);
+  
+  // Voeg de juiste class toe
+  this.classList.add(isCorrect ? 'correct-hover' : 'incorrect-hover');
   }
   
+  
   function dragDrop() {
-  if (!this.classList.contains('member-title')) return;
+  if (!this.classList.contains('member-picture')) return;
   
     dropTargetId = this.id;
+    const isCorrect = checkForMatch(selectedId, dropTargetId);
   
-    if (checkForMatch(selectedId, dropTargetId)) {
+    if (isCorrect) {
     // Verberg beide elementen
     const memberId = selectedId.split('-')[1]; // Haal het ID-nummer eruit
     document.getElementById(`pic-${memberId}`).style.display = 'none';
@@ -147,7 +181,7 @@
   }
   
   function dragLeave() {
-    this.classList.remove('over');
+  this.classList.remove('correct-hover', 'incorrect-hover');
   }
   
   function checkForMatch(selected, dropTarget) {
