@@ -4,37 +4,37 @@
     <h2>leden van klas {{ class_id }}</h2>
     <p>
       <strong>Instructie:</strong>
-      Sleep de naam van een lid naar de juiste profielfoto om ze te matchen!
+      Selecteer voor elke profielfoto de juiste naam uit de dropdown lijst!
     </p>
   </div>
-  <div class="container">
-    <ul class="member-list">
-      {% for member in members %}
-        <li class="member-picture" id="pic-{{ member.id }}">
-          <picture>
-            <source srcset="/proxy-image?url={{ member.depiction_url }}" type="image/webp">
-            <img
-              src="/proxy-image?url={{ member.depiction_url }}"
-              alt="Profiel van {{ member.profile.resource.title }}"
-              width="100"
-              height="100"
-              loading="lazy">
-          </picture>
-        </li>
-      {% endfor %}
-    </ul>
 
-    <ul class="member-list">
-      {% for member in members %}
-        <li
-          class="member-title"
-          draggable="true"
-          id="name-{{ member.id }}">
-          <p>{{ member.profile.resource.title }}</p>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
+  <form method="post" action="/check-matches">
+    <div class="container">
+      <ul class="member-list">
+        {% for member in members %}
+          <li class="member-picture" id="pic-{{ member.id }}">
+            <picture>
+              <source srcset="/proxy-image?url={{ member.depiction_url }}" type="image/webp">
+              <img
+                src="/proxy-image?url={{ member.depiction_url }}"
+                alt="Profiel van {{ member.profile.resource.title }}"
+                width="100"
+                height="100"
+                loading="lazy">
+            </picture>
+            <select name="match-{{ member.id }}" required>
+              <option value="">Selecteer naam</option>
+              {% for member in members %}
+                <option value="{{ member.id }}">{{ member.profile.resource.title }}</option>
+              {% endfor %}
+            </select>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <button type="submit">Controleer matches</button>
+  </form>
 
   <div class="end-message">
     <h2>Goed gedaan! Alle matches zijn voltooid!</h2>
@@ -55,27 +55,24 @@
   }
 
   .container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    margin-top: 1em;
-    gap: 1em;
+    margin-top: 2em;
   }
-  .member-list:nth-child(1) {
-    width: fit-content;
-    height: fit-content;
+
+  .member-list {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 5px;
+    gap: 20px;
+    margin: 0 auto;
   }
 
   @media (min-width: 765px) {
-    .member-list:nth-child(1) {
+    .member-list {
       grid-template-columns: repeat(3, 1fr);
     }
   }
 
   @media (min-width: 1440px) {
-    .member-list:nth-child(1) {
+    .member-list {
       grid-template-columns: repeat(4, 1fr);
     }
   }
@@ -83,109 +80,32 @@
   .member-list li {
     list-style: none;
     color: #263238;
-    cursor: grab;
     width: auto;
-    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
   }
 
   .member-picture img {
     border: 1px solid black;
   }
 
-  .member-title {
+  select {
     padding: 5px;
-    background-color: #cfd8dc;
-    border: 1px solid black;
-    margin-bottom: 5px;
+    min-width: 150px;
+  }
+
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
   }
 
   .end-message {
     display: none;
   }
-
-  .correct-hover {
-    box-shadow: 0 0 0 3px green;
-  }
-
-  .incorrect-hover {
-    box-shadow: 0 0 0 3px red;
-  }
 </style>
-
-<script>
-  const draggableListItems = document.querySelectorAll('.member-list li');
-  const endMessage = document.querySelector('.end-message');
-  const totalMembers = document.querySelectorAll('.member-picture').length;
-  
-  // console.log(`totaal members : ${totalMembers}`);
-  
-  // Huidige drag
-  let selectedId;
-  
-  // Target drop
-  let dropTargetId;
-  
-  // Teller voor correcte drops
-  let matchingCounter = 0;
-  
-  
-  function addEventListener() {
-    draggableListItems.forEach (item => {
-      item.addEventListener('dragstart', dragStart);
-      item.addEventListener('dragenter', dragEnter);
-      item.addEventListener('drop', dragDrop);
-      item.addEventListener('dragover', dragOver);
-      item.addEventListener('dragleave', dragLeave);
-    })
-  } 
-  
-  function dragStart() {
-  selectedId = this.id;
-  // console.log(`selected : ${selectedId}`);
-  }
-  
-  function dragEnter(event) {  
-  // Check of het een goede match is
-  const isCorrect = checkForMatch(selectedId, this.id);
-  
-  // Voeg de juiste class toe
-  this.classList.add(isCorrect ? 'correct-hover' : 'incorrect-hover');
-  }
-  
-  
-  function dragDrop() {
-  if (!this.classList.contains('member-picture')) return;
-  
-    dropTargetId = this.id;
-    const isCorrect = checkForMatch(selectedId, dropTargetId);
-  
-    if (isCorrect) {
-    // Verberg beide elementen
-    const memberId = selectedId.split('-')[1]; // Haal het ID-nummer eruit
-    document.getElementById(`pic-${memberId}`).style.display = 'none';
-    document.getElementById(`name-${memberId}`).style.display = 'none';
-    matchingCounter++;
-    }
-  
-    // console.log(`dropTargetId : ${dropTargetId}`);
-  
-    if (matchingCounter === totalMembers) {
-      endMessage.style.display = 'block'; // Show end-message na een win
-    }
-  
-    this.classList.remove('over');
-  }  
-  
-  function dragOver(event) {
-  event.preventDefault(); // Voorkom pagia reload
-  }
-  
-  function dragLeave() {
-  this.classList.remove('correct-hover', 'incorrect-hover');
-  }
-  
-  function checkForMatch(selected, dropTarget) {
-    // Split en match op basis van het ID-nummer
-  return selected.split('-')[1] === dropTarget.split('-')[1];
-  }
-</script>
