@@ -143,6 +143,43 @@ app.get("/class/:classID", async function (request, response) {
   });
 });
 
+app.post("/class/:classID/check-matches", function (request, response) {
+  // 1. Pak ALLES wat ingevuld is in het formulier
+  const formData = request.body; // Bijv: Key: 'match-55173', Value: '55173'
+  const classID = request.params.classID;
+
+  // 2. Een teller voor goede antwoorden
+  let right = 0;
+  let total = 0;
+
+  // console.log(formData);
+
+  // 3. Loop door ALLE formuliervelden heen
+  for (const question in formData) {
+    // 4. Kijk alleen naar vragen die met 'match-' beginnen
+    if (question.startsWith("match-")) {
+      total++; // Tel elke vraag mee
+
+      // 5. Check of het answer goed is
+      // Bijv: question = "match-55173", value = "55173"
+      const key = question.replace("match-", ""); // Vervang match met "" zodat id overblijft
+      const value = formData[question]; // "55173"
+
+      const isCorrect = key === value;
+      if (isCorrect) right++; // Tel 1 bij goed op
+    }
+  }
+
+  // 6. Render het template met ALLE benodigde data
+  response.render("class.liquid", {
+    class_id: classID, // Klasnummer
+    score: { // Score
+      right: right,
+      total: total,
+    },
+  });
+});
+
 // Geen matching route request
 app.use((request, respond) => {
   respond.status(404).render("404.liquid");
