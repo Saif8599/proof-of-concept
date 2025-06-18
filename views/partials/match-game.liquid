@@ -1,55 +1,97 @@
 <section class="match-game">
-  <div class="match-game-info">
-    <h1>Match Game</h1>
-    <h2>leden van klas {{ class_id }}</h2>
-    <p>
-      <strong>Instructie:</strong>
-      Selecteer voor elke profielfoto de juiste naam uit de dropdown lijst!
-    </p>
-  </div>
-
-  <form method="post" action="/check-matches">
-    <div class="container">
-      <ul class="member-list">
-        {% for member in members %}
-          <li class="member-picture" id="pic-{{ member.id }}">
-            <picture>
-              <source srcset="/proxy-image?url={{ member.depiction_url }}" type="image/webp">
-              <img
-                src="/proxy-image?url={{ member.depiction_url }}"
-                alt="Profiel van {{ member.profile.resource.title }}"
-                width="100"
-                height="100"
-                loading="lazy">
-            </picture>
-            <select name="match-{{ member.id }}" required>
-              <option value="">Selecteer naam</option>
-              {% for member in members %}
-                <option value="{{ member.id }}">{{ member.profile.resource.title }}</option>
-              {% endfor %}
-            </select>
-          </li>
-        {% endfor %}
-      </ul>
+  {% if score %}
+    <div class="score-overlay">
+      <h1>Resultaat: {{ score.right }} van {{ score.total }} goed!</h1>
+      <p>Wil je het nog eens proberen?</p>
+      <a href="/class/{{ class_id }}" class="restart-button">Opnieuw spelen</a>
     </div>
+  {% else %}
+    <div class="match-game-info">
+      <h1>Match Game</h1>
+      <h2>leden van klas {{ class_id }}</h2>
+      <p>
+        <strong>Instructie:</strong>
+        Selecteer voor elke profielfoto de juiste naam uit de dropdown lijst!
+      </p>
+    </div>
+  {% endif %}
 
-    <button type="submit">Controleer matches</button>
-  </form>
-
-  <div class="end-message">
-    <h2>Goed gedaan! Alle matches zijn voltooid!</h2>
-    <p>Wil je het nog eens proberen?</p>
-    <a href="/class/55501" class="restart-button">Opnieuw spelen</a>
-  </div>
+  {% if score %}
+  {% else %}
+    <form method="post" action="/class/{{ class_id }}/check-matches">
+      <div class="container">
+        <ul class="member-list">
+          {% for member in members %}
+            <li class="member-picture" id="pic-{{ member.id }}">
+              <picture>
+                <source srcset="/proxy-image?url={{ member.depiction_url }}" type="image/webp">
+                <img
+                  src="/proxy-image?url={{ member.depiction_url }}"
+                  alt="Profiel van {{ member.profile.resource.title }}"
+                  width="100"
+                  height="100"
+                  loading="lazy">
+              </picture>
+              <select name="match-{{ member.id }}" required>
+                <option value="">Selecteer naam</option>
+                {% for member in members %}
+                  <option value="{{ member.id }}">{{ member.profile.resource.title }}</option>
+                {% endfor %}
+              </select>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <button class="submit-button" type="submit">Controleer matches</button>
+    </form>
+  {% endif %}
 </section>
 
 <style>
+  /* match-game */
   .match-game {
     max-width: 960px;
     padding: 1em;
     margin: auto;
   }
 
+  /* Score Overlay */
+  .score-overlay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  @media (max-width: 425px) {
+    .score-overlay {
+      margin-top: 2em;
+    }
+    .score-overlay h1 {
+      font-size: 1.5em;
+    }
+  }
+  .score-overlay p {
+    margin-top: 1em;
+  }
+  .restart-button {
+    position: fixed;
+    bottom: 10%;
+    padding: 12px 32px;
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    width: fit-content;
+    border-radius: 17px;
+  }
+
+  @media (min-width: 765px) {
+    .restart-button {
+      position: inherit;
+      margin-top: 2em;
+    }
+  }
+
+  /* Match Game Info */
   .match-game-info p {
     margin-top: 10px;
   }
@@ -58,6 +100,13 @@
     margin-top: 2em;
   }
 
+  /* Form */
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  /* Member List */
   .member-list {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -70,10 +119,14 @@
       grid-template-columns: repeat(3, 1fr);
     }
   }
-
-  @media (min-width: 1440px) {
+  @media (min-width: 1200px) {
     .member-list {
       grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  @media (min-width: 1440px) {
+    .member-list {
+      grid-template-columns: repeat(5, 1fr);
     }
   }
 
@@ -96,16 +149,15 @@
     min-width: 150px;
   }
 
-  button {
-    margin-top: 20px;
+  .submit-button {
+    margin-top: 2em;
+    font-size: var(--font-size-desktop-s);
     padding: 10px 20px;
     background-color: #4CAF50;
     color: white;
     border: none;
     cursor: pointer;
-  }
-
-  .end-message {
-    display: none;
+    border-radius: 5px;
+    width: fit-content;
   }
 </style>
