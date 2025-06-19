@@ -1,79 +1,144 @@
 <section class="notice-board">
-  <h1>Prikbord</h1>
-  <div class="formField">
-    <div class="avatar">
+  <div class="notice-board-info">
+    <h1>Prikbord</h1>
+    <p>Jouw bericht maakt iemands dag leuker!</p>
+  </div>
+  <div class="post-form">
+    <div class="user-avatar">
       <a href="#">
-        <picture>
-          <source srcset="https://i.pravatar.cc/400" type="image/avif">
-          <img src="https://i.pravatar.cc/400" alt="Avatar">
-        </picture>
+        <img
+          src="https://i.pravatar.cc/400"
+          alt="Profiel foto"
+          width="50"
+          height="50">
       </a>
     </div>
 
     <form
-      class="form"
+      class="message-form"
       method="post"
       action="/notice-board">
       <textarea
-        type="text"
         name="textArea"
         id="post"
         rows="3"
-        placeholder="Wat denk jij ?"
-        required></textarea>
-      <button
-        class=""
-        type="submit"
-        class="submit">Versturen</button>
+        placeholder="Wat denk jij?"
+        required
+        aria-label="Bericht invoeren"></textarea>
+      <button type="submit" class="submit-button">Plaatsen</button>
     </form>
   </div>
 </section>
 
-<section class="comments">
+<section class="messages">
   {% for message in messages %}
-    <div class="comment">
-         {{ message.message }}   
+    <div class="message">
+      {{ message.message }}
     </div>
   {% endfor %}
 </section>
 
 <style>
-  /*  notice-board */
-  .formField {
-    width: fit-content;
-    display: flex;
-    margin: 0 auto;
-    max-width: 90%;
-    gap: 1em;
-
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px black;
+  .notice-board {
+    max-width: 960px;
+    padding: 1em;
+    margin: auto;
   }
 
-  .avatar img {
+  .notice-board p {
+    margin: 1em 0;
+  }
+
+  .post-form {
+    max-width: 600px;
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 0 0 2px var(--secondary-color);
+  }
+
+  .user-avatar img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid grey;
   }
 
-  .form {
-    width: 300px;
+  .message-form {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    gap: 1rem;
   }
 
   textarea {
     width: 100%;
     resize: none;
+    padding: 0.75rem;
+    border: 1px solid grey;
+    border-radius: 8px;
+    font-size: 1rem;
+    min-height: 80px;
+    transition: all 0.3s ease;
+  }
+  
+  textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(68, 137, 248, 0.2);
   }
 
-  /*  Comments */
-  .comments {
-    width: 300px;
-    margin: 2em auto 0;
-    max-width: 90%;
+  textarea::placeholder {
+    transition: all 0.2s ease;
+  }
 
+  textarea:focus::placeholder {
+    transform: translateX(10px);
+    transition: transform 0.3s ease;
+  }
+
+  .submit-button {
+    align-self: stretch;
+    padding: 12px 32px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 17px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .submit-button:hover {
+    background-color: #3367d6;
+  }
+  .submit-button:active {
+    transform: scale(0.9);
+  }
+
+  .messages {
+    max-width: 960px;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: auto;
+  }
+
+  .message {
+    max-width: 600px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 0 2px var(--secondary-color);
+  }
+
+  @media (min-width: 426px) {
+    .submit-button {
+      padding: 12px 32px;
+      align-self: flex-end;
+    }
   }
 </style>
