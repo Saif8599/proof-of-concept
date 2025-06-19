@@ -25,7 +25,10 @@
         placeholder="Wat denk jij?"
         required
         aria-label="Bericht invoeren"></textarea>
-      <button type="submit" class="submit-button">Plaatsen</button>
+      <button class="submit-button" type="submit">
+        <span class="submit-button-text">Plaatsen</span>
+        <span class="loader js-loader" style="display: none;"></span>
+      </button>
     </form>
   </div>
 </section>
@@ -37,7 +40,30 @@
     </div>
   {% endfor %}
 </section>
-
+<script>
+  // Loader tonen en verbergen
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.message-form');
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault(); // Eerst voorkomen
+        const button = this.querySelector('.submit-button');
+        const buttonText = button.querySelector('.submit-button-text');
+        const loader = button.querySelector('.js-loader');
+    
+        // Toon loader en verberg tekst
+        button.disabled = true;
+        if (buttonText) buttonText.style.display = 'none';
+        if (loader) loader.style.display = 'inline-block';
+        
+        // Verstuur formulier na korte delay
+        setTimeout(function() {
+          form.submit(); // Manuele submit
+        }, 500);
+      });
+    }
+  });
+</script>
 <style>
   .notice-board {
     max-width: 960px;
@@ -84,7 +110,7 @@
     min-height: 80px;
     transition: all 0.3s ease;
   }
-  
+
   textarea:focus {
     outline: none;
     border-color: var(--primary-color);
@@ -118,7 +144,10 @@
   .submit-button:active {
     transform: scale(0.9);
   }
-
+  
+  .submit-button-text {
+    font-size: var(--font-size-desktop-m);
+  }
   .messages {
     max-width: 960px;
     padding: 1em;
