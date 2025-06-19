@@ -32,7 +32,7 @@
                   height="100"
                   loading="lazy">
               </picture>
-              <select name="match-{{ member.id }}">
+              <select name="match-{{ member.id }}" required>
                 <option value="">Selecteer naam</option>
                 {% for member in members %}
                   <option value="{{ member.id }}">{{ member.profile.resource.title }}</option>
