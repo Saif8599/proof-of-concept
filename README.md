@@ -37,15 +37,26 @@ In dit project heb ik gebruik gemaakt van Node.js en Express om een webserver te
 
 
 **UI States & Interacties**
+
 Loading states: Voor de buttons in de Groepsruimte en Prikbord heb ik bewust gekozen voor een loading state. Wanneer gebruikers op een knop klikken, verandert deze direct in een loading animatie. Dit geeft direct visuele feedback dat hun actie is geregistreerd  
+
+
+https://github.com/user-attachments/assets/d3697a45-e193-4c28-a018-a7b26ab029c6
+
 
 **Perceived performance**
 De profielfoto's worden dynamisch geladen via een lazy loading techniek, waarbij alleen zichtbare afbeeldingen direct worden ingeladen.
 
 **View transitions**
+
 Om de performance voor de gebruiker te verbeteren heb ik view transitions toegepast.
 
+
+https://github.com/user-attachments/assets/8011b9ab-b7ae-4b45-ad72-f4b31e492e72
+
+
 **Progressive Enhancement**
+
 De match-game is opgebouwd vanuit een solide HTML-formulier basis die via POST-requests werkt. Dit functionaliteit is vervolgens verrijkt met:
 - Een subtiele match resultaat na het controleren.
 - Visuele feedback met een loading state.
@@ -65,10 +76,18 @@ Foto-naam matching:
 Scorebord:
 - Directe feedback na elke match met je resultaten.
   
+
+https://github.com/user-attachments/assets/559b2d2c-2ec0-4f22-8d53-0c5e6b001b46
+
+
 **Notice Board**
 
 - Gebruikers kunnen berichten plaatsen via een invoerveld.
 - Posts verschijnen onmiddellijk in de feed na plaatsen.
+
+
+https://github.com/user-attachments/assets/7b796dba-4776-4148-885c-f53d199b2caf
+
 
 ## Installatie
 
